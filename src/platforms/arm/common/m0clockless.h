@@ -1,5 +1,6 @@
 #ifndef __INC_M0_CLOCKLESS_H
 #define __INC_M0_CLOCKLESS_H
+#include "hardware/structs/systick.h"
 
 struct M0ClocklessData {
   uint8_t d[3];
@@ -313,7 +314,7 @@ showLedData(volatile uint32_t *_port, uint32_t _bitmask, const uint8_t *_leds, u
       M0_ASM_ARGS
       );
 
-      uint32_t ticksBeforeInterrupts = SysTick->VAL;
+      uint32_t ticksBeforeInterrupts = systick_hw->cvr;
       sei();
       --counter;
       cli();
@@ -327,7 +328,7 @@ showLedData(volatile uint32_t *_port, uint32_t _bitmask, const uint8_t *_leds, u
       const uint32_t kTicksPerUs = kTicksPerMs / 1000;
       const uint32_t kTicksIn45us = kTicksPerUs * 45;
 
-      const uint32_t currentTicks = SysTick->VAL;
+      const uint32_t currentTicks = systick_hw->cvr;
 
       if (ticksBeforeInterrupts < currentTicks) {
         // Timer started over
